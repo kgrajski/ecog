@@ -1,5 +1,5 @@
 
-"""
+'''
 This module provides a class `ECoGArrayRec` for simulating and analyzing 
 Electrocorticography (ECoG) data. The class allows for the creation of an 
 ECoG array with specified dimensions and the addition of activations and 
@@ -15,9 +15,9 @@ Usage example:
                         ampl_wobble=0.1, var_wobble=0.1, window_wobble=5)
     ecog.add_noise(noise_floor_mean=0, noise_floor_var=0.1)
     ecog.implot(time_start=0, time_end=100)
-    ecog.to_csv(out_dir='output')
+    ecog.save(out_dir='output')
     ecog.tsplot(ix=5, iy=5)
-"""
+'''
 
 import itertools
 import math
@@ -31,7 +31,7 @@ from scipy.stats import multivariate_normal
 import time
 
 class ECoGArrayRec:
-    """
+    '''
     A class to represent an ECoG (Electrocorticography) array recording.
     Attributes
     ----------
@@ -55,13 +55,13 @@ class ECoGArrayRec:
         Generates a Gaussian kernel for a given set of parameters.
     implot(time_start, time_end, time_step=1, interval=200):
         Plots an animation of the ECoG data over a specified time range.
-    to_csv(out_dir):
+    save(out_dir):
         Saves the ECoG data to a CSV file.
     tsplot(ix, iy):
         Plots the time series data for a specific electrode position.
-    """
+    '''
 
-    def __init__(self, idkey, num_samples, num_rows, num_cols):
+    def __init__(self, idkey='', num_samples=0, num_rows=0, num_cols=0):
         self.idkey = idkey
         self.num_samples = num_samples
         self.num_rows = num_rows
@@ -141,21 +141,34 @@ class ECoGArrayRec:
                             repeat=False,
                             blit=True)
         plt.show()
-        
-    def to_csv(self, out_dir):
-            # Create a file name and write a csv file for ecog (only).
-        fname = os.path.join(out_dir + os.sep + self.idkey + ".csv")
-        np.savetxt(fname,
-                   self.ecog.reshape(self.ecog.shape[0], -1),
-                   fmt='%.4f',
-                   delimiter = ',')
+
+    def load(self, fname):
+            # Read a file name and load a csv file for ecog.
+        with open(fname, 'r') as f:
+            idkey = f.read().strip()
+            if idkey != self.idkey:
+                raise ValueError('Idkey mismatch')
+            self.num_samples, self.num_rows, self.num_cols = map(int, f.readline().strip().split(','))
+            self.ecog = np.loadtxt(f, delimiter=",")
+            self.ecog = self.ecog.reshape(self.num_samples, self.num_rows, self.num_cols)
+
+    def save(self, out_dir):
+            # Create a file name and write a csv file.
+        idkey = self.idkey
+        fname = os.path.join(out_dir + os.sep + self.idkey + '.csv')
+        with open(fname, 'w') as f:
+            f.write(f"{idkey}\n")
+            ix = [str(x) for x in (self.num_samples, self.num_rows, self.num_cols)]
+            f.write(', '.join(ix) + '\n')
+            np.savetxt(f, self.ecog.reshape(self.ecog.shape[0], -1), fmt='%.4f', delimiter=',')
+        return idkey
         
     def tsplot(self, ix, iy):
             # Create the plot
         x = range(self.num_samples)
         y = self.ecog[:,ix,iy]
         plt.plot(x, y)
-        plt.xlabel("Time")
-        plt.ylabel("Amplitude")
-        plt.title("Time Series For: [" + str(ix) + ", " + str(iy) + "]")
+        plt.xlabel('Time')
+        plt.ylabel('Amplitude')
+        plt.title('Time Series For: [' + str(ix) + ', ' + str(iy) + ']')
         plt.show()

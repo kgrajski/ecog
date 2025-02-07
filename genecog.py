@@ -1,3 +1,16 @@
+'''
+Module: genecog
+This module generates synthetic ECoG (Electrocorticography) data samples for different classes and saves them to CSV files. 
+The generated data includes noise and activations with specified parameters.
+Functions:
+    gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, to_csv=True):
+        Generates a single ECoG data sample with noise and activation, and optionally saves it to a CSV file and displays it.
+    main():
+        Main function to generate a labeled dataset of ECoG data samples for multiple classes and save the dataset information to CSV files.
+Usage:
+    Run this module as a script to generate the ECoG dataset and save the results to the specified output directory.
+'''
+
 import itertools
 import math
 import matplotlib.pyplot as plt
@@ -14,12 +27,12 @@ import time
 #
 from ecog import ECoGArrayRec
         
-#
+#s
 # Local Code
 #
-def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, to_csv=True):
+def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=True):
             # Set up the ECoG Electrode Array parameters
-    idkey = "ecog_" + str(class_label) + "_" + str(isamp)
+    idkey = 'ecog_' + str(class_label) + '_' + str(isamp)
     num_samples = 32 # Lenght of time series
     num_rows = 64 # Medial to lateral
     num_cols = 32 # Rostral to caudal
@@ -60,8 +73,11 @@ def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, to_csv=T
         
         # Write the results (reshaped)
         # Subsequent readers (e.g., DataLoader) will need to know about the reshape.
-    if to_csv:
-        ecog_array.to_csv(out_dir)
+    if save:
+        ecog_array.save(out_dir)
+        
+        # Return the idkey
+    return ecog_array.idkey
 
 #
 # MAIN
@@ -69,24 +85,24 @@ def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, to_csv=T
 def main():
 
         # Set script name for console log
-    script_name = "genecog"
+    script_name = 'genecog'
     
         # Start timer
     start_time = time.perf_counter()
+    print('*** ' + script_name + '- START ***')
 
         # For reproducibility
-    random.seed(42)
+    np.random.seed(42)
 
         #
         # Generate a labelled dataset.
-        #   A "class" will map to a contiguous subset of the ECoG array.
+        #   A 'class' will map to a contiguous subset of the ECoG array.
         #   Each such subset is specified by a center and +/- range (in row and col directions).
         #   Sample individual activations within that area.
         #
-    out_dir = "data"
+    out_dir = 'data'
     num_classes = 6
-    num_samples_per_class = 1
-    labels = range(num_classes)
+    num_samples_per_class = 10
     origin_row = [12, 32, 52]
     row_window = 8
     origin_col = [8, 24]
@@ -94,17 +110,27 @@ def main():
     locs = list(itertools.product(origin_row, origin_col))
     
         # Create sample data for each class.
+    idkeys_study = []
+    labels_study = []
     class_label = -1
     for irow, jcol in locs:
         class_label += 1
         for isamp in range(num_samples_per_class):
             i = random.randint(irow - row_window, irow + row_window)
             j = random.randint(jcol - col_window, jcol + col_window)
-            gen_data_sample(class_label, isamp, i, j, out_dir, show=False, to_csv=True)
+            idkey = gen_data_sample(class_label, isamp, i, j, out_dir, show=False, save=True)
+            labels_study.append([idkey, class_label])
+            idkeys_study.append([out_dir, idkey])
+    
+        # Write the idkeys_study an labels_study files.
+    idkeys_study = pd.DataFrame(idkeys_study, columns=['path', 'idkey'])
+    idkeys_study.to_csv(os.path.join(out_dir + os.sep + 'study.csv'), index=False)
+    labels_study = pd.DataFrame(labels_study, columns=['idkey', 'label'])
+    labels_study.to_csv(os.path.join(out_dir + os.sep + 'labels.csv'), index=False)
             
         # Wrap-up
-    print(f"Total elapsed time:  %.4f seconds" % (time.perf_counter() - start_time))
-    print("*** " + script_name + "- END ***")
+    print(f'Total elapsed time:  %.4f seconds' % (time.perf_counter() - start_time))
+    print('*** ' + script_name + '- END ***')
             
 #
 # EXECUTE
