@@ -1,9 +1,11 @@
+import os
+import pandas as pd
+
 import torch
-from torchvision import datasets
-from torchvision.transforms import ToTensor
-from torch.utils.data import DataLoader, Subset, random_split, Dataset
+from torch.utils.data import Dataset
 
 from ecog import ECoGArrayRec
+
 
 class ECoGDataSet(Dataset):
     """
@@ -23,8 +25,8 @@ class ECoGDataSet(Dataset):
 
     def __getitem__(self, idx):
         file_path, label = self.samples.path[idx], self.samples.label[idx]
-        print("GET_ITEM=",idx,file_path,label)
-        ecog_array = ECoGArrayRec().load(file_path)
+        ecog_array = ECoGArrayRec()
+        ecog_array.load(file_path)
         ecog_tensor = torch.tensor(ecog_array.ecog, dtype=torch.float32).unsqueeze(0) #unsqueeze to support batching later
         label_tensor = torch.tensor(label, dtype=torch.float32).unsqueeze(0)
         if self.transform:

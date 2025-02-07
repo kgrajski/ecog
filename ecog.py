@@ -145,9 +145,7 @@ class ECoGArrayRec:
     def load(self, fname):
             # Read a file name and load a csv file for ecog.
         with open(fname, 'r') as f:
-            idkey = f.read().strip()
-            if idkey != self.idkey:
-                raise ValueError('Idkey mismatch')
+            self.idkey = f.readline().strip()
             self.num_samples, self.num_rows, self.num_cols = map(int, f.readline().strip().split(','))
             self.ecog = np.loadtxt(f, delimiter=",")
             self.ecog = self.ecog.reshape(self.num_samples, self.num_rows, self.num_cols)
