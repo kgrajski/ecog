@@ -102,7 +102,7 @@ def main():
         #
     out_dir = 'data'
     num_classes = 6
-    num_samples_per_class = 1
+    num_samples_per_class = 100
     origin_row = [12, 32, 52]
     row_window = 8
     origin_col = [8, 24]

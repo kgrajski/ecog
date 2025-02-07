@@ -9,8 +9,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 
-
-
 # Get the ECoGDataSet class defs.
 #
 from ecogds import ECoGDataSet
@@ -49,7 +47,7 @@ def main():
     val_prop = 0.2
     test_prop = 0.2
     train_prop = 1 - val_prop - test_prop
-    batch_size = 4
+    batch_size = 8
     
         #
         # Directory containing the actual data.
