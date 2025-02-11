@@ -110,6 +110,7 @@ def main():
     locs = list(itertools.product(origin_row, origin_col))
     
         # Create sample data for each class.
+        # class_label os 0-indexed
     idkeys_study = []
     labels_study = []
     class_label = -1

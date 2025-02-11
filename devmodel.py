@@ -15,7 +15,13 @@ from ecogds import ECoGDataSet
 
 #
 # Local Code
+# Eventually move to a helper function file.
 #
+def zero_mean_unit_sd(x):
+    mean = x.mean()
+    std = x.std()
+    y = (x - mean) / std
+    return y
 
 #
 # MAIN
@@ -62,7 +68,10 @@ def main():
     label_list_fname = "labels.csv"
     
         # Make a study dataset
-    study_dataset = ECoGDataSet(study_dir, study_list_fname, label_list_fname, preproc_dir)
+    study_dataset = ECoGDataSet(study_dir, study_list_fname, label_list_fname, preproc_dir,
+                                transform=zero_mean_unit_sd,
+                                target_transform=lambda y: F.one_hot(y, num_classes=study_dataset.num_classes))
+    
     print("** SUMMARY **", study_dataset.samples.groupby(['label'])['label'].count())
 
         # Make the train, validation, and test splits
@@ -96,6 +105,13 @@ def main():
         print("TEST")
         test_batch = next(iter(test_dl))
         print('Batch shape',test_batch[0].shape)
+        
+        for batch_idx, (batch_data, batch_labels) in enumerate(val_batch):
+            print(f"Batch index: {batch_idx}")
+            print("Batch data shape:", batch_data.shape)
+            print("Batch labels:", batch_labels)
+            print("Batch labels shape:", batch_labels.shape)
+    # Use batch_data and batch_labels for training
             
         # Wrap-up
     print(f"Total elapsed time:  %.4f seconds" % (time.perf_counter() - start_time))
