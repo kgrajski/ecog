@@ -41,7 +41,7 @@ class ECoGDataSet(Dataset):
         ecog_array = ECoGArrayRec()
         ecog_array.load(file_path)
         ecog_tensor = torch.tensor(ecog_array.ecog, dtype=torch.float32).unsqueeze(0) #unsqueeze to support batching later
-        label_tensor = torch.tensor(label, dtype=torch.int64).unsqueeze(0)
+        label_tensor = torch.tensor(label, dtype=torch.int64)
         if self.transform:
             ecog_tensor = self.transform(ecog_tensor)
         if self.target_transform:
