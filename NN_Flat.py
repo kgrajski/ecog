@@ -16,7 +16,6 @@ class NN_Flat(nn.Module):
 
             # Add additional hidden layers
         for _ in range(num_layers - 1):
-            hidden_size /= 2
             layers.append(nn.Linear(hidden_dim, hidden_dim))
             layers.append(nn.ReLU())
         
