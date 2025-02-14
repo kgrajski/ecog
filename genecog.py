@@ -33,7 +33,7 @@ from ecog import ECoGArrayRec
 def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=True):
             # Set up the ECoG Electrode Array parameters
     idkey = 'ecog_' + str(class_label) + '_' + str(isamp)
-    num_samples = 32 # Lenght of time series
+    num_samples = 32 # Length of time series
     num_rows = 64 # Medial to lateral
     num_cols = 32 # Rostral to caudal
     

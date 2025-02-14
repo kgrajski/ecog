@@ -15,11 +15,65 @@ from torch.utils.tensorboard import SummaryWriter
 #
 from ecogds import ECoGDataSet
 from NN_Flat import NN_Flat
+from NN_Conv3D_Simple import NN_Conv3D_Simple
 
 #
 # Local Code
 # Eventually move to a helper function file.
 #
+
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters())
+
+def count_trainable_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+    def run_exp(exp_name, model, num_epochs, train_dl, test_dl, val_dl, loss_fn, optimizer, device):
+        
+        print("Exp =", exp_name)
+        for iter in range(num_epochs):
+            print(f"Epoch {iter+1}\n-------------------------------")
+            train_avg_batch_loss = train(train_dl, model, loss_fn, optimizer, device)
+            print('Test Set')
+            test_avg_batch_loss, correct = test(test_dl, model, loss_fn, device)
+            writer.add_scalars('Training vs Test Loss and Correct',
+                               {'Train' : train_avg_batch_loss, 'Test' : test_avg_batch_loss,
+                                'Correct' : correct}, iter)
+    
+        print('Validation Set')
+        test(val_dl, model, loss_fn, device)
+        print("Done!\n\n")
+        
+def run_exp(exp_name, model, num_epochs, train_dl, test_dl, val_dl, loss_fn, optimizer, device, pre_train_test=True):
+    
+            #
+            # Set up tensorboard
+            # Default log_dir argument is "runs" - but it's good to be specific
+            # torch.utils.tensorboard.SummaryWriter is imported above
+            #
+    writer = SummaryWriter(os.path.join('runs' + os.sep + exp_name))
+    
+    print("##### Start Exp =", exp_name)
+    print(model)
+    print(f"Total parameters: {count_parameters(model)}")
+    print(f"Trainable parameters: {count_trainable_parameters(model)}")
+    
+    if pre_train_test:
+        test(test_dl, model, loss_fn, device)
+
+    for iter in range(num_epochs):
+        print(f"Epoch {iter+1}\n-------------------------------")
+        train_avg_batch_loss = train(train_dl, model, loss_fn, optimizer, device)
+        print('Test Set')
+        test_avg_batch_loss, correct = test(test_dl, model, loss_fn, device)
+        writer.add_scalars('Training vs Test Loss and Correct',
+                           {'Train' : train_avg_batch_loss, 'Test' : test_avg_batch_loss,
+                            'Correct' : correct}, iter)
+    
+    print('Validation Set')
+    test(val_dl, model, loss_fn, device)
+    print("##### Done Exp =", exp_name, "\n\n")
+
 def train(dataloader, model, loss_fn, optimizer, device):
         # Taken from PyTorch Getting Started
     size = len(dataloader.dataset)
@@ -97,14 +151,14 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device=", device)
 
-        # For reproducibility
+        # For reproducibility and fair comparisons
     numpy_seed = 412938
     torch_seed = 293487
     np.random.seed(numpy_seed)
     torch.manual_seed(torch_seed)
     
         #
-        # Learning Parameters
+        # Dataset Partitioning Parameters
         #
     val_prop = 0.2
     test_prop = 0.2
@@ -138,14 +192,14 @@ def main():
     train_dataset, val_dataset, test_dataset = random_split(study_dataset, [train_prop, val_prop, test_prop])
 
         #
-        # Run DataLoader
+        # Setup DataLoaders
         #
     train_dl = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_dl = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     test_dl = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
         #
-        # OPTIONAL: Quick check
+        # OPTIONAL: Quick sanity checks to make sure data read in correctlyl
         #
     if 0:
         
@@ -168,54 +222,47 @@ def main():
         #
         #   Model Training
         #
-        
-            #
-            # Set up tensorboard
-            # Default log_dir argument is "runs" - but it's good to be specific
-            # torch.utils.tensorboard.SummaryWriter is imported above
-            #
-    writer = SummaryWriter('runs/dev_ecog')
-        
-            #
-            #   Set up the model.
-            #
-    input_dim = 32 * 64 * 32
-    hidden_dim = 16
-    output_dim = 6
-    num_layers = 2
-    model = NN_Flat(input_dim, hidden_dim, num_layers, output_dim).to(device)
-    print(model)
-    
+
             #
             #   Select Loss Function and Optimizer
             #
+    num_epochs = 10
+    lrn_rate = 0.001
+    lrn_momentum = 0.9
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
-    
+        
             #
-            #   Measure performance on the untrained network.
+            #   Set up the model and run the experiment
             #
-    if 0:
-        test(test_dl, model, loss_fn, device)
-    
-            #
-            #   Do the training.
-            #
-    num_epochs = 5
-    for iter in range(num_epochs):
-        print(f"Epoch {iter+1}\n-------------------------------")
-        train_avg_batch_loss = train(train_dl, model, loss_fn, optimizer, device)
-        print('Test Set')
-        test_avg_batch_loss, correct = test(test_dl, model, loss_fn, device)
-                    # Log the running loss averaged per batch
-        writer.add_scalars('Training vs Test Loss and Correct',
-                           {'Train' : train_avg_batch_loss, 'Test' : test_avg_batch_loss,
-                            'Correct' : correct}, iter)
-    
-    print('Validation Set')
-    test(val_dl, model, loss_fn, device)
-    print("Done!")
-    
+
+                #
+                #   Dirt simple "flattened" model.
+                #
+    if 1:
+        exp_name = "NN_Flat"
+        input_dim = 32 * 64 * 32
+        hidden_dim = 8
+        output_dim = 6
+        num_layers = 3
+        model = NN_Flat(input_dim, hidden_dim, num_layers, output_dim).to(device)
+        optimizer = torch.optim.SGD(model.parameters(), lr=lrn_rate, momentum=lrn_momentum)
+        run_exp(exp_name, model, num_epochs, train_dl, test_dl, val_dl, loss_fn, optimizer, device)
+
+        
+                #
+                #   Very simple Conv3D model.
+                #
+    if 1:
+        exp_name = "NN_Conv3D_Simple"
+        in_depth = 32
+        in_rows = 64
+        in_cols = 32
+        fc_dim = 32
+        output_dim = 6
+        model = NN_Conv3D_Simple(in_depth, in_rows, in_cols, fc_dim, output_dim).to(device)
+        optimizer = torch.optim.SGD(model.parameters(), lr=lrn_rate, momentum=lrn_momentum)
+        run_exp(exp_name, model, num_epochs, train_dl, test_dl, val_dl, loss_fn, optimizer, device)
+
         #
         # Wrap-up
         #
