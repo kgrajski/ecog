@@ -30,6 +30,18 @@ from ecog import ECoGArrayRec
 #s
 # Local Code
 #
+def gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir, show_ecog=True, save_ecog=True):
+
+    idkeys = []
+    labels = []
+    for isamp in range(num_samples_per_class):
+        i = random.randint(irow - row_window, irow + row_window)
+        j = random.randint(jcol - col_window, jcol + col_window)
+        idkey = gen_data_sample(class_label, isamp, i, j, out_dir, show_ecog, save_ecog)
+        labels.append([idkey, class_label])
+        idkeys.append([out_dir, idkey])
+    return idkeys, labels
+
 def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=True):
             # Set up the ECoG Electrode Array parameters
     idkey = 'ecog_' + str(class_label) + '_' + str(isamp)
@@ -46,26 +58,27 @@ def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=Tru
     ecog_array.add_noise(noise_floor_mean, noise_floor_var)
     #ecog_array.implot(0, ecog_array.num_samples, 1)
     
+    if class_label:
             # Add an activation
-    x0 = irow # Matrix position
-    y0 = icol # Matrix position
-    position_wobble = 2 # In units of matrix positions
-    x_var = 2
-    y_var = 4
-    xy_var = -1
-    var_wobble = 0.1 # used to define an amplitude range 
-    t_start = 8 # Number of dt time steps
-    t_end = 16 # Number of dt time steps
-    window_wobble = 4 # Number of dt time steps
-    ampl = 10
-    ampl_wobble = 0.10 # used to define an amplitude range
-    tc_onset = 0.1 # Time constant in seconds
-    tc_offset = 0.1 # Time constant in seconds
-    dt = 0.05 # Time step in seconds
-    ecog_array.add_activation(x0, y0,
-                              x_var, y_var, xy_var,
-                              t_start, t_end, ampl, tc_onset, tc_offset,
-                              dt, position_wobble, ampl_wobble, var_wobble, window_wobble)
+        x0 = irow # Matrix position
+        y0 = icol # Matrix position
+        position_wobble = 2 # In units of matrix positions
+        x_var = 2
+        y_var = 4
+        xy_var = -1
+        var_wobble = 0.1 # used to define an amplitude range 
+        t_start = 8 # Number of dt time steps
+        t_end = 16 # Number of dt time steps
+        window_wobble = 4 # Number of dt time steps
+        ampl = 4
+        ampl_wobble = 0.10 # used to define an amplitude range
+        tc_onset = 0.1 # Time constant in seconds
+        tc_offset = 0.1 # Time constant in seconds
+        dt = 0.05 # Time step in seconds
+        ecog_array.add_activation(x0, y0,
+                                  x_var, y_var, xy_var,
+                                  t_start, t_end, ampl, tc_onset, tc_offset,
+                                  dt, position_wobble, ampl_wobble, var_wobble, window_wobble)
 
         # Show the results
     if show:
@@ -102,7 +115,7 @@ def main():
         #
     out_dir = 'data'
     num_classes = 6
-    num_samples_per_class = 1000
+    num_samples_per_class = 1
     origin_row = [12, 32, 52]
     row_window = 8
     origin_col = [8, 24]
@@ -111,21 +124,20 @@ def main():
     
         # Create sample data for each class.
         # class_label os 0-indexed
-    idkeys_study = []
-    labels_study = []
-    class_label = -1
+    class_label = 0 # use the convenstion that class label 0 is the "no response (noise)" class.
+    irow = 0 # Set row and column positions to zero
+    jcol = 0  
+    idkeys_study, labels_study = gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir)
     for irow, jcol in locs:
-        class_label += 1
-        for isamp in range(num_samples_per_class):
-            i = random.randint(irow - row_window, irow + row_window)
-            j = random.randint(jcol - col_window, jcol + col_window)
-            idkey = gen_data_sample(class_label, isamp, i, j, out_dir, show=False, save=True)
-            labels_study.append([idkey, class_label])
-            idkeys_study.append([out_dir, idkey])
+        class_label = class_label + 1
+        idkeys, labels = gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir)
+        idkeys_study.extend(idkeys)
+        labels_study.extend(labels)
     
         # Write the idkeys_study an labels_study files.
     idkeys_study = pd.DataFrame(idkeys_study, columns=['path', 'idkey'])
     idkeys_study.to_csv(os.path.join(out_dir + os.sep + 'study.csv'), index=False)
+   
     labels_study = pd.DataFrame(labels_study, columns=['idkey', 'label'])
     labels_study.to_csv(os.path.join(out_dir + os.sep + 'labels.csv'), index=False)
             

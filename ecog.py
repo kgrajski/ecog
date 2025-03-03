@@ -121,8 +121,9 @@ class ECoGArrayRec:
     
     def implot(self, time_start, time_end, time_step=1, interval=200):
         
-            # Create a figure and axes
-        fig, ax = plt.subplots()
+            # Create a new figure and axes explicitly
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
             # Initialize the plot
         im = ax.imshow(self.ecog[0], cmap='hot', origin='upper')
@@ -162,6 +163,8 @@ class ECoGArrayRec:
         return idkey
         
     def tsplot(self, ix, iy):
+            # Create a new figure
+        plt.figure()
             # Create the plot
         x = range(self.num_samples)
         y = self.ecog[:,ix,iy]
@@ -169,4 +172,4 @@ class ECoGArrayRec:
         plt.xlabel('Time')
         plt.ylabel('Amplitude')
         plt.title('Time Series For: [' + str(ix) + ', ' + str(iy) + ']')
-        plt.show()
+        plt.draw()
