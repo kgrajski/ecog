@@ -1,7 +1,8 @@
 """
 NN_Conv3D_Simple.py
 
-This module defines the NN_Conv3D_Simple class, which is a simple 3D convolutional neural network implemented using PyTorch. The network consists of a 3D convolutional layer, followed by fully connected layers. It also includes methods for forward propagation.
+This module defines the NN_Conv3D_Simple class, which is a simple 3D convolutional neural network implemented using PyTorch.
+The network consists of a 3D convolutional layer, followed by fully connected layers. It also includes methods for forward propagation.
 
 Classes:
 --------
