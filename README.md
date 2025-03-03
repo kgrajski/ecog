@@ -12,9 +12,13 @@ What motivated this exercise was the desire to explore 3D convolutional and 3D v
 
 So, in this repo, we specify a certain array size and generate known spatial patterns of activations.
 
-For example, here is a screenshot of a frame from a time series:
+Here is a example of a frame from a time series:
 
 ![image](https://github.com/user-attachments/assets/fb9847f0-03c8-4471-b6ec-65f4ae12de2a)
+
+Here is an example of the time series of an individual array node:
+
+![image](https://github.com/user-attachments/assets/f66627c7-1e82-4d35-93c7-8224bbe0ef80)
 
 Then when we run the workflows we know exactly what we expect to see and can gain some confidence that the code is correct.
 
