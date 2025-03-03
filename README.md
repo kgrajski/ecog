@@ -1,10 +1,27 @@
-# Project Title
+# Simulated Electro-corticogram (ECOG) Data
 
-Simple overview of use/purpose.
+The purpose of this repo is to generate artificial ECOG-data.
+The use of an artificial ECOG dataset is to support develop and testing of an ECOG AI/ML workflow.
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+ECOG = Electro-corticogram.  A recording of brain electrical activity measured at the brain surface typically using electrode arrays.
+
+What motivated this exercise was the desire to explore 3D convolutional and 3D visual transformer type workflows.
+
+So, in this repo, we specify a certain array size and generate known spatial pattern of activations.
+
+The implementation is simple object oriented programming of an individual ECOG "recording".
+
+Those ECOG recordings are aggregated into an ECOG Dataset.
+
+The end goal is to run experiments through a series of neural network architectures.
+
+The framework of choice is PyTorch with results displayed to TensorBoard.
+
+This repo has some education value.
+
+But lately, I have access to real experimental data. See: speechBCI repo.
 
 ## Getting Started
 
