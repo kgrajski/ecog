@@ -15,8 +15,13 @@ Those ECOG recordings are aggregated into an ECOG Dataset.
 
 The end goal is to run experiments through a series of neural network architectures.
 
-The framework of choice is PyTorch with results displayed to Tensor Board.
+The framework of choice is PyTorch with results displayed to TensorBoard.
 
 This repo has some education value.
 
 But lately, I have access to real experimental data.  See: speechBCI repo.
+
+ecog.py - the ECOG Class
+ecogds.py - the ECOG Dataset Class
+genecog.py - this script generates simulated background + activation.
+devmodel.py - the test workflow (PyTorch, TensorBoard)
