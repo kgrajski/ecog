@@ -1,7 +1,7 @@
 # Simulated Electro-corticogram (ECOG) Data
 
 The purpose of this repo is to generate artificial ECOG-data.  
-The use of an artificial ECOG dataset is to support develop and testing of an ECOG AI/ML workflow.
+The use of an artificial ECOG dataset is to support development and testing of an ECOG AI/ML workflow.
 
 ## Description
 
@@ -27,43 +27,34 @@ But lately, I have access to real experimental data. See: speechBCI repo.
 
 ## Getting Started
 
+To generate data exercise the genecog.py script.
+
+To do some simple neural network experiments exercise the devmodel.py script.
+
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* No special requirements beyond the imports listed in the scripts.
+* This repo was developed and executed on AWS via VSS Code.
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* No special requirements beyond the imports listed in the scripts.
+* This repo was developed and executed on AWS via VSS Code.
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+* See Getting Started above.
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+Send an email to: kgrajski@nurosci.com
 
 ## Authors
 
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Kamil A. Grajski (kgrajski@nurosci.com)
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
 
@@ -74,8 +65,4 @@ This project is licensed under the [NAME HERE] License - see the LICENSE.md file
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+* (https://gist.github.com/DomPizzie) for the ReadMe template.
