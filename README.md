@@ -4,6 +4,8 @@ The purpose of this repo is to generate artificial ECOG-data.
 
 The use of an artificial ECOG dataset is to support development and testing of an ECOG AI/ML workflow.
 
+The reason to do something like this is to have confidence in the code once real neural data is processed.
+
 ## Description
 
 ECOG = Electro-corticogram.  A recording of brain electrical activity measured at the brain surface typically using electrode arrays.
