@@ -1,15 +1,24 @@
-'''
-Module: genecog
-This module generates synthetic ECoG (Electrocorticography) data samples for different classes and saves them to CSV files. 
-The generated data includes noise and activations with specified parameters.
+"""
+genecog.py
+
+This script generates synthetic ECoG (Electrocorticography) data samples for different classes and saves them to CSV files. The generated data includes noise and activations with specified parameters.
+
 Functions:
-    gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, to_csv=True):
-        Generates a single ECoG data sample with noise and activation, and optionally saves it to a CSV file and displays it.
-    main():
-        Main function to generate a labeled dataset of ECoG data samples for multiple classes and save the dataset information to CSV files.
+----------
+gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir, show_ecog=False, save_ecog=True)
+    Generates a labeled dataset of ECoG data samples for multiple classes and saves the dataset information to CSV files.
+
+gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=True)
+    Generates a single ECoG data sample with noise and activation, and optionally saves it to a CSV file and displays it.
+
+main()
+    Main function to generate the ECoG dataset and save the results to the specified output directory.
+
 Usage:
-    Run this module as a script to generate the ECoG dataset and save the results to the specified output directory.
-'''
+------
+To run the script, execute the following command in the terminal:
+    python genecog.py
+"""
 
 import itertools
 import math
@@ -30,7 +39,7 @@ from ecog import ECoGArrayRec
 #s
 # Local Code
 #
-def gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir, show_ecog=True, save_ecog=True):
+def gen_class_samples(class_label, num_samples_per_class, irow, jcol, row_window, col_window, out_dir, show_ecog=False, save_ecog=True):
 
     idkeys = []
     labels = []
@@ -83,6 +92,7 @@ def gen_data_sample(class_label, isamp, irow, icol, out_dir, show=True, save=Tru
         # Show the results
     if show:
         ecog_array.implot(0, ecog_array.num_samples, interval=50)
+        ecog_array.tsplot(irow, icol)
         
         # Write the results (reshaped)
         # Subsequent readers (e.g., DataLoader) will need to know about the reshape.
@@ -115,7 +125,7 @@ def main():
         #
     out_dir = 'data'
     num_classes = 6
-    num_samples_per_class = 1
+    num_samples_per_class = 200
     origin_row = [12, 32, 52]
     row_window = 8
     origin_col = [8, 24]

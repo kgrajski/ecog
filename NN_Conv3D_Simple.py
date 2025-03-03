@@ -1,3 +1,25 @@
+"""
+NN_Conv3D_Simple.py
+
+This module defines the NN_Conv3D_Simple class, which is a simple 3D convolutional neural network implemented using PyTorch. The network consists of a 3D convolutional layer, followed by fully connected layers. It also includes methods for forward propagation.
+
+Classes:
+--------
+NN_Conv3D_Simple
+    A simple 3D convolutional neural network with specified input dimensions, fully connected layer dimensions, and output dimensions.
+
+    Methods:
+    --------
+    __init__(self, in_depth, in_rows, in_cols, fc_dim, output_dim, pcnt_dropout=0.15)
+        Initializes the NN_Conv3D_Simple object with the given parameters and constructs the network layers.
+
+    _conv_layer_set(self, in_c, out_c, conv3d_kernel_size, max_pool_kernel_size)
+        Creates a sequential container of a 3D convolutional layer, LeakyReLU activation, and MaxPool3D layer.
+
+    forward(self, x)
+        Defines the forward pass of the network.
+"""
+
 import torch
 import torch.nn as nn
 

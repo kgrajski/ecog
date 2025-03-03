@@ -226,7 +226,7 @@ def main():
             #
             #   Select Loss Function and Optimizer
             #
-    num_epochs = 10
+    num_epochs = 100
     lrn_rate = 0.001
     lrn_momentum = 0.9
     loss_fn = nn.CrossEntropyLoss()
@@ -238,7 +238,7 @@ def main():
                 #
                 #   Dirt simple "flattened" model.
                 #
-    if 1:
+    if 0:
         exp_name = "NN_Flat"
         input_dim = 32 * 64 * 32
         hidden_dim = 8

@@ -1,3 +1,25 @@
+"""
+NN_Flat.py
+
+This module defines the NN_Flat class, which is a simple feedforward neural network implemented using PyTorch. The network consists of an input layer, multiple hidden layers, and an output layer. It also includes methods for forward propagation and printing the model parameters.
+
+Classes:
+--------
+NN_Flat
+    A simple feedforward neural network with a specified number of layers and dimensions.
+
+    Methods:
+    --------
+    __init__(self, input_dim, hidden_dim, num_layers, output_dim)
+        Initializes the NN_Flat object with the given parameters and constructs the network layers.
+
+    forward(self, x)
+        Defines the forward pass of the network.
+
+    print_params(self, show_values=False)
+        Prints the structure and parameters of the network. Optionally, prints the values of the parameters.
+"""
+
 import torch
 import torch.nn as nn
 

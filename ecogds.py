@@ -1,3 +1,28 @@
+"""
+ecogds.py
+
+This module defines the ECoGDataSet class, which is a custom PyTorch Dataset tailored for Electrocorticography (ECoG) array recordings. It facilitates loading, transforming, and accessing ECoG data for machine learning tasks.
+
+Classes:
+--------
+ECoGDataSet
+    A PyTorch custom Dataset for ECoG Array Recordings.
+
+    Methods:
+    --------
+    __init__(self, study_dir, study_list_fname, label_list_fname, preproc_dir, transform=None, target_transform=None)
+        Initializes the ECoGDataSet object with the given parameters and generates the dataset.
+
+    __len__(self)
+        Returns the number of samples in the dataset.
+
+    gen_dataset(self, study_dir, study_list_fname, label_list_fname, preproc_dir)
+        Generates the dataset by reading study and label files and merging them.
+
+    __getitem__(self, idx)
+        Retrieves the ECoG data and label for a given index, applies transformations if specified, and returns them as tensors.
+"""
+
 import os
 import pandas as pd
 
