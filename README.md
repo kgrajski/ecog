@@ -9,7 +9,9 @@ ECOG = Electro-corticogram.  A recording of brain electrical activity measured a
 
 What motivated this exercise was the desire to explore 3D convolutional and 3D visual transformer type workflows.
 
-So, in this repo, we specify a certain array size and generate known spatial pattern of activations.
+So, in this repo, we specify a certain array size and generate known spatial patterns of activations.
+
+Then when we run the workflows we know exactly what we expect to see and can gain some confidence that the code is correct.
 
 The implementation is simple object oriented programming of an individual ECOG "recording".
 
