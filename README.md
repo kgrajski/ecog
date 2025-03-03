@@ -1,6 +1,7 @@
 # Simulated Electro-corticogram (ECOG) Data
 
-The purpose of this repo is to generate artificial ECOG-data.  
+The purpose of this repo is to generate artificial ECOG-data.
+
 The use of an artificial ECOG dataset is to support development and testing of an ECOG AI/ML workflow.
 
 ## Description
@@ -10,6 +11,10 @@ ECOG = Electro-corticogram.  A recording of brain electrical activity measured a
 What motivated this exercise was the desire to explore 3D convolutional and 3D visual transformer type workflows.
 
 So, in this repo, we specify a certain array size and generate known spatial patterns of activations.
+
+For example, here is a screenshot of a frame from a time series:
+
+![image](https://github.com/user-attachments/assets/fb9847f0-03c8-4471-b6ec-65f4ae12de2a)
 
 Then when we run the workflows we know exactly what we expect to see and can gain some confidence that the code is correct.
 
