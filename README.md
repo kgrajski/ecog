@@ -1,6 +1,6 @@
 # Simulated Electro-corticogram (ECOG) Data
 
-The purpose of this repo is to generate artificial ECOG-data.
+The purpose of this repo is to generate artificial ECOG-data.  
 The use of an artificial ECOG dataset is to support develop and testing of an ECOG AI/ML workflow.
 
 ## Description
