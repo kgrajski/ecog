@@ -6,6 +6,8 @@ The use of an artificial ECOG dataset is to support development and testing of a
 
 The reason to do something like this is to have confidence in the code once real neural data is processed.
 
+Skills applied: Python, PyTorch, CNN, CUDA/GPU, AWS, Visual Studio Code, GitHub Co-Pilot.
+
 ## Description
 
 ECOG = Electro-corticogram.  A recording of brain electrical activity measured at the brain surface typically using electrode arrays.
